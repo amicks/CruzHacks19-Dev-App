@@ -63,6 +63,20 @@ class Hackers(Resource):
         del res['private_id']
         return res
     
+    @use_kwargs({k: types[k](missing=None) if k != 'public_id' else types[k](required=True) for k in types.keys()})
+    def put(self, public_id, first_name, last_name, email, age, needs_transportation, rsvp_status, app_status,
+             shirt_size, gender, team_id, university, class_year):
+        # Get only args that are not None, i.e. they were input in the request
+        args = locals()
+        entered_args = {k: v for k, v in args.items() if args[k] is not None}
+        del entered_args['self']
+        
+        hacker = get_query_res(HackersModel, public_id=entered_args.pop('public_id'))[0]
+        for k, v in entered_args.items():
+            setattr(hacker, k, v)
+
+        db.session.commit()
+
     @use_kwargs({'public_id': types['public_id'](required=True)})
     def delete(self, public_id):
         hacker = get_query_res(HackersModel, public_id=public_id)[0]
