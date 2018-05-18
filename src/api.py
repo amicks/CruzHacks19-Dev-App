@@ -27,6 +27,7 @@ class Hackers(Resource):
     def get(self, public_id, team_id, first_name, last_name, email, gender, age, needs_transportation,
             rsvp_status, app_status, shirt_size, university, class_year):
         # Get only args that are not None, i.e. they were input in the request
+        # Should also implement setting values to None (maybe use 'null'?)
         args = locals()
         entered_args = {k: v for k, v in args.items() if args[k] is not None}
         del entered_args['self']
@@ -67,6 +68,7 @@ class Hackers(Resource):
     def put(self, public_id, first_name, last_name, email, age, needs_transportation, rsvp_status, app_status,
              shirt_size, gender, team_id, university, class_year):
         # Get only args that are not None, i.e. they were input in the request
+        # Should also implement setting values to None (maybe use 'null'?)
         args = locals()
         entered_args = {k: v for k, v in args.items() if args[k] is not None}
         del entered_args['self']
