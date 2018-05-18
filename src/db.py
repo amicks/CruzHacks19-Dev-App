@@ -1,5 +1,5 @@
 from flask_sqlalchemy import SQLAlchemy
-from uuid import uuid5, NAMESPACE_URL
+from uuid import uuid4
 
 db = SQLAlchemy()
 
@@ -38,8 +38,8 @@ class Hackers(db.Model):
             setattr(self, arg, val)
         
         # Still need public ID and private ID, generate them from unique email
-        url_id = uuid5(NAMESPACE_URL, email)
-        self.private_id = str(url_id)
+        guid = uuid4()
+        self.private_id = str(guid)
         
         CONVERT_128_TO_16_BITS = 112
-        self.public_id = url_id.int >> CONVERT_128_TO_16_BITS
+        self.public_id = guid.int >> CONVERT_128_TO_16_BITS

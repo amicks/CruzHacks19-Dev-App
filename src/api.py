@@ -27,10 +27,19 @@ def query_to_dict(query):
 @api.resource('/hackers/')
 class Hackers(Resource):
 
-    @use_kwargs({'public_id': types['public_id'](required=True)})
-    def get(self, public_id):
-        res = query_to_dict(HackersModel.query.filter_by(public_id=public_id).first())
-        del res['private_id']
+    @use_kwargs({k: types[k](missing=None) for k in types.keys()})
+    def get(self, public_id, team_id, first_name, last_name, email, gender, age, needs_transportation,
+            rsvp_status, app_status, shirt_size, university, class_year):
+        # Get only args that are not None, i.e. they were input in the request
+        args = locals()
+        entered_args = {k: v for k, v in args.items() if args[k] is not None}
+        del entered_args['self']
+
+        res = []
+        for q in HackersModel.query.filter_by(**entered_args).all():
+            d = query_to_dict(q)
+            del d['private_id']
+            res.append(d)
         return res
 
     @use_kwargs({
@@ -57,3 +66,4 @@ class Hackers(Resource):
         res = query_to_dict(new_hacker)
         del res['private_id']
         return res
+        
