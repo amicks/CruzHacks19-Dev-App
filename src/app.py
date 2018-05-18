@@ -5,9 +5,6 @@ from os import getenv
 
 app = Flask(__name__)
 
-def db_uri_setup():
-    return 'mysql://root:password@server/db'
-
 if __name__=='__main__':
     with app.app_context():
 
@@ -16,7 +13,6 @@ if __name__=='__main__':
 
         # Get DB connection path if specified, else default to sqlite
         db_uri = getenv('SQLALCHEMY_DATABASE_URI')
-
         app.config['SQLALCHEMY_DATABASE_URI'] = db_uri if db_uri else 'sqlite:///:memory:'
         app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
         app.config['SQLALCHEMY_RECORD_QUERIES'] = True
