@@ -1,5 +1,6 @@
 from flask_sqlalchemy import SQLAlchemy
 from uuid import uuid5, NAMESPACE_URL
+
 db = SQLAlchemy()
 
 class Hackers(db.Model):
