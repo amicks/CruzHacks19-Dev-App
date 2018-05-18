@@ -66,4 +66,9 @@ class Hackers(Resource):
         res = query_to_dict(new_hacker)
         del res['private_id']
         return res
-        
+
+    @use_kwargs({'public_id': types['public_id'](required=True)})
+    def delete(self, public_id):
+        hacker = HackersModel.query.filter_by(public_id=public_id).first()
+        db.session.delete(hacker)
+        db.session.commit()

@@ -56,3 +56,4 @@ users = [
 
 for user in users:
     print(requests.post(endpoint, data=user).json())
+
