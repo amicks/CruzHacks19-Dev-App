@@ -10,6 +10,7 @@ def db_uri_setup():
 
 if __name__=='__main__':
     with app.app_context():
+
         # Connect RESTful API to Flask Server
         api.init_app(app)
 
@@ -23,7 +24,7 @@ if __name__=='__main__':
 
         # Connect DB instance to Flask Server
         db.init_app(app)
-        #db.drop_all() # Clear all tables [DEBUG ONLY]
+        db.drop_all() # Clear all tables [DEBUG ONLY]
         db.create_all() # Create any tables if they do not exist
 
     app.run(debug=True) # Run Flask Server
