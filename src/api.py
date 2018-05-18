@@ -1,4 +1,4 @@
-from db import db, Hackers as HackersModel
+from db import db, Hackers as HackersModel, get_query_res, query_to_dict
 from flask_restful import Api, Resource
 from webargs import fields
 from webargs.flaskparser import use_kwargs
@@ -21,12 +21,8 @@ types = {
     'class_year': fields.Integer
 }
 
-def query_to_dict(query):
-    return dict((col, getattr(query, col)) for col in query.__table__.columns.keys())
-
 @api.resource('/hackers/')
 class Hackers(Resource):
-
     @use_kwargs({k: types[k](missing=None) for k in types.keys()})
     def get(self, public_id, team_id, first_name, last_name, email, gender, age, needs_transportation,
             rsvp_status, app_status, shirt_size, university, class_year):
@@ -36,12 +32,12 @@ class Hackers(Resource):
         del entered_args['self']
 
         res = []
-        for q in HackersModel.query.filter_by(**entered_args).all():
+        for q in get_query_res(HackersModel, **entered_args):
             d = query_to_dict(q)
             del d['private_id']
             res.append(d)
         return res
-
+    
     @use_kwargs({
         'team_id': types['team_id'](missing=None),
         'first_name': types['first_name'](required=True),
@@ -66,9 +62,9 @@ class Hackers(Resource):
         res = query_to_dict(new_hacker)
         del res['private_id']
         return res
-
+    
     @use_kwargs({'public_id': types['public_id'](required=True)})
     def delete(self, public_id):
-        hacker = HackersModel.query.filter_by(public_id=public_id).first()
+        hacker = get_query_res(HackersModel, public_id=public_id)[0]
         db.session.delete(hacker)
         db.session.commit()

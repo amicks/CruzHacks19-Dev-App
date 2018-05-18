@@ -3,6 +3,14 @@ from uuid import uuid4
 
 db = SQLAlchemy()
 
+def query_to_dict(query):
+    return dict((col, getattr(query, col)) for col in query.__table__.columns.keys())
+
+def get_query_res(db_model, **kwargs):
+    """ Returns all kwarg matches in DB model as a list """
+    return db_model.query.filter_by(**kwargs).all()
+
+
 class Hackers(db.Model):
     __tablename__ = 'hackers'
 
